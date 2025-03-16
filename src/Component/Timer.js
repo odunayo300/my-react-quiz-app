@@ -1,29 +1,46 @@
 import React, { useEffect, useState } from 'react'
+import './Timer.css'
+import wrongSound from '../assets/wrong.mp3'
+import useSound from 'use-sound'
 
-export default function Timer({setStopTime,questionNumber}) {
 
-    const [Timer,setTimer] = useState(30)
+export default function Timer({questionNumber,setWrongAnswer}) {
 
-    useEffect(()=>{
-        if(Timer === 0){setStopTime(true)}
+  const[time, setTime] = useState(30)
+  const[wrong] = useSound(wrongSound)
 
-          const count = setInterval(()=>{
-              setTimer(Timer - 1)
-          },1000)
-          
-          return(()=>{
-            clearInterval(count)
-          })
-    },[Timer,setStopTime])
 
-    useEffect(()=>{
-      setTimer(30)
-    },[questionNumber])
-    
-    return(
-      <div>
-        {Timer}
-      </div>
-    )
+  useEffect(()=>{
+
+    const timer= setInterval(()=>{
+
+      if(time > 0){
+        setTime(time - 1)
+      }
+    },1000)
+
+   return()=>{
+    clearInterval(timer)
+   }
+
+  },[time,questionNumber])
+
+  useEffect(()=>{
+    if(questionNumber){
+      setTime(30)
+    }
+  },[questionNumber])
+
+  useEffect(()=>{
+    if(time === 0){
+      setWrongAnswer(true)
+       wrong()
+    }
+  },)
+
+  return (
+    <div>
+      <span className='timer'>{time}</span>
+    </div>
+  )
 }
-
